@@ -9,7 +9,7 @@
   <h2 v-if="flag">Hello</h2>
   </transition> -->
 
-  <transition
+  <!-- <transition
     @before-enter="beforeEnter"
     @enter="enter"
     @after-enter="afterEnter"
@@ -20,7 +20,19 @@
     name="fade"
   >
     <h2 v-if="flag">Hey</h2>
-  </transition>
+  </transition> -->
+
+  <button @click="addItem">Add</button>
+
+  <ul>
+    <transition-group name="fade">
+      <li v-for="(number, index) in numbers" :key="number"
+        @click="removeItem(index)"
+      >
+        {{ number }}
+      </li>
+    </transition-group>
+  </ul>
 </template>
 
 <script>
@@ -29,9 +41,18 @@
     data() {
       return {
         flag: true,
+        numbers: [1, 2, 3, 4, 5],
       }
     },
     methods: {
+      addItem() {
+        const num = Math.floor(Math.random() * 100 + 1)
+        const index = Math.floor(Math.random() * this.numbers.length)
+        this.numbers.splice(index, 0, num);
+      },
+      removeItem(index) {
+        this.numbers.splice(index, 1);
+      },
       beforeEnter(el) {
         console.log('before enter event fired', el)
       },
@@ -67,6 +88,11 @@
 </script>
 
 <style>
+  li {
+    font-size: 22px;
+    cursor: pointer;
+  }
+
   h2 {
     width: 400px;
     padding: 20px;
@@ -84,6 +110,14 @@
   .fade-leave-to {
     transition: all 1s linear;
     opacity: 0;
+  }
+
+  .fade-move {
+    transition: all 1s linear;
+  }
+
+  .fade-leave-active {
+    position: absolute;
   }
 
   .zoom-enter-active {
