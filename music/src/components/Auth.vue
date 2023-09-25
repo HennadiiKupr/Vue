@@ -80,7 +80,7 @@
             </button>
           </vee-form>
           <!-- Registration Form -->
-          <vee-form v-show="tab === 'register'">
+          <vee-form v-show="tab === 'register'" :validation-schema="schema">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
@@ -90,6 +90,7 @@
                 placeholder="Enter Name"
                 name="name"
               />
+              <ErrorMessage class="text-red-600" name="name" />
             </div>
             <!-- Email -->
             <div class="mb-3">
@@ -158,19 +159,30 @@
 <script>
 import { mapState, mapWritableState } from "pinia";
 import useModalStore from "@/stores/modal";
+import { ErrorMessage } from "vee-validate";
 
 export default {
-  name: "Auth",
-  data() {
-    return {
-      tab: "login"
-    };
-  },
-  computed: {
-    ...mapState(useModalStore, ["hiddenClass"]),
-    ...mapWritableState(useModalStore, {
-      modalVisibility: "isOpen"
-    })
-  }
+    name: "Auth",
+    data() {
+        return {
+            tab: "login",
+            schema: {
+                name: "required",
+                email: "",
+                age: "",
+                password: "",
+                confirm_password: "",
+                country: "",
+                tos: "",
+            }
+        };
+    },
+    computed: {
+        ...mapState(useModalStore, ["hiddenClass"]),
+        ...mapWritableState(useModalStore, {
+            modalVisibility: "isOpen"
+        })
+    },
+    components: { ErrorMessage }
 };
 </script>
