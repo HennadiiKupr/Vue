@@ -156,20 +156,20 @@
 </template>
 
 <script>
-import { mapState, mapWritableState } from 'pinia';
-import useModalStore from '@/stores/modal';
+import { mapState, mapWritableState } from "pinia";
+import useModalStore from "@/stores/modal";
 
 export default {
-  name: 'Auth',
+  name: "Auth",
   data() {
     return {
-      tab: 'login'
+      tab: "login"
     };
   },
   computed: {
-    ...mapState(useModalStore, ['hiddenClass']),
+    ...mapState(useModalStore, ["hiddenClass"]),
     ...mapWritableState(useModalStore, {
-      modalVisibility: 'isOpen'
+      modalVisibility: "isOpen"
     })
   }
 };

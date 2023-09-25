@@ -269,11 +269,11 @@
 </template>
 
 <script>
-import AppHeader from './components/Header.vue';
-import Auth from './components/Auth.vue';
+import AppHeader from "./components/Header.vue";
+import Auth from "./components/Auth.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     AppHeader,
     Auth
