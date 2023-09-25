@@ -31,9 +31,9 @@
                 class="block rounded py-3 px-4 transition"
                 href="#"
                 @click.prevent="tab = 'login'"
-                :class="{ 
+                :class="{
                   'hover:text-white text-white bg-blue-600': tab === 'login',
-                  'hover:text-blue-600': tab === 'register',
+                  'hover:text-blue-600': tab === 'register'
                 }"
                 >Login</a
               >
@@ -43,9 +43,9 @@
                 class="block rounded py-3 px-4 transition"
                 href="#"
                 @click.prevent="tab = 'register'"
-                :class="{ 
+                :class="{
                   'hover:text-white text-white bg-blue-600': tab === 'register',
-                  'hover:text-blue-600': tab === 'login',
+                  'hover:text-blue-600': tab === 'login'
                 }"
                 >Register</a
               >
@@ -80,7 +80,12 @@
             </button>
           </vee-form>
           <!-- Registration Form -->
-          <vee-form v-show="tab === 'register'" :validation-schema="schema">
+          <vee-form
+            v-show="tab === 'register'"
+            :validation-schema="schema"
+            @submit="register"
+            :initial-values="userData"
+          >
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
@@ -116,12 +121,17 @@
             <!-- Password -->
             <div class="mb-3">
               <label class="inline-block mb-2">Password</label>
-              <vee-field
-                type="password"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Password"
-                name="password"
-              />
+              <vee-field name="password" :bails="false" v-slot="{ field, errors }">
+                <input
+                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+                  placeholder="Password"
+                  type="password"
+                  v-bind="field"
+                />
+                <div class="text-red-600" v-for="error in errors" :key="error">
+                  {{ error }}
+                </div>
+              </vee-field>
               <ErrorMessage name="password" class="text-red-600" />
             </div>
             <!-- Confirm Password -->
@@ -138,18 +148,28 @@
             <!-- Country -->
             <div class="mb-3">
               <label class="inline-block mb-2">Country</label>
-              <select
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+              <vee-field
+                as="select"
+                name="country"
+                class="block bg-white w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
               >
                 <option value="USA">USA</option>
                 <option value="Mexico">Mexico</option>
                 <option value="Germany">Germany</option>
-              </select>
+                <option value="Antarctica">Antarctica</option>
+              </vee-field>
+              <ErrorMessage class="text-red-600" name="country" />
             </div>
             <!-- TOS -->
             <div class="mb-3 pl-6">
-              <input type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded" />
-              <label class="inline-block">Accept terms of service</label>
+              <vee-field
+                type="checkbox"
+                class="w-4 h-4 float-left -ml-6 mt-1 rounded"
+                name="tos"
+                value="1"
+              />
+              <label class="block">Accept terms of service</label>
+              <ErrorMessage class="text-red-600" name="tos" />
             </div>
             <button
               type="submit"
@@ -170,27 +190,35 @@ import useModalStore from "@/stores/modal";
 import { ErrorMessage } from "vee-validate";
 
 export default {
-    name: "Auth",
-    data() {
-        return {
-            tab: "login",
-            schema: {
-                name: "required|min:3|max:100|alpha_spaces",
-                email: "required|min:3|max:50|email",
-                age: "required|min_value:18|max_value: 150",
-                password: "required|min:3|max:24",
-                confirm_password: "confirmed:@password",
-                country: "",
-                tos: "",
-            }
-        };
-    },
-    computed: {
-        ...mapState(useModalStore, ["hiddenClass"]),
-        ...mapWritableState(useModalStore, {
-            modalVisibility: "isOpen"
-        })
-    },
-    components: { ErrorMessage }
+  name: "Auth",
+  data() {
+    return {
+      tab: "login",
+      schema: {
+        name: "required|min:3|max:100|alpha_spaces",
+        email: "required|min:3|max:50|email",
+        age: "required|min_value:18|max_value: 150",
+        password: "required|min:9|max:24|excluded:password",
+        confirm_password: "passwords_mismatch:@password",
+        country: "required|country_excluded:Antarctica",
+        tos: "tos"
+      },
+      userData: {
+        country: "USA"
+      }
+    };
+  },
+  computed: {
+    ...mapState(useModalStore, ["hiddenClass"]),
+    ...mapWritableState(useModalStore, {
+      modalVisibility: "isOpen"
+    })
+  },
+  methods: {
+    register(values) {
+      console.log(values);
+    }
+  },
+  components: { ErrorMessage }
 };
 </script>
