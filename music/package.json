@@ -10,10 +10,11 @@
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/ && npm run lint" 
+    "format": "prettier --write src/ && npm run lint"
   },
   "dependencies": {
     "@vee-validate/rules": "^4.11.7",
+    "firebase": "^10.4.0",
     "pinia": "^2.1.6",
     "vee-validate": "^4.11.7",
     "vue": "^3.3.4",
